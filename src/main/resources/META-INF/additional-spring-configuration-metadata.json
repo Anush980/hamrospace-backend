@@ -1,0 +1,52 @@
+{"properties": [
+  {
+    "name": "app.jwt.access-key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.access-key'"
+  },
+  {
+    "name": "app.jwt.secret-key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.secret-key'"
+  },
+  {
+    "name": "app.jwt.access-expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.access-expiration'"
+  },
+  {
+    "name": "app.jwt.refresh-expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.refresh-expiration'"
+  },
+  {
+    "name": "app.jwt.short-refresh-expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.short-refresh-expiration'"
+  },
+  {
+    "name": "app.jwt.issuer",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.issuer'"
+  },
+  {
+    "name": "app.cors.allowed-origins",
+    "type": "java.lang.String",
+    "description": "A description for 'app.cors.allowed-origins'"
+  },
+  {
+    "name": "app.email.from-address",
+    "type": "java.lang.String",
+    "description": "A description for 'app.email.from-address'"
+  },
+  {
+    "name": "app.email.resend-api-key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.email.resend-api-key'"
+  },
+  {
+    "name": "app.email.from-name",
+    "type": "java.lang.String",
+    "description": "A description for 'app.email.from-name'"
+  }
+]}

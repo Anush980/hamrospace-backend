@@ -25,6 +25,7 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Override
     public UserProfileDetailedResponse getMyProfile() {
+        
 
 
         // TODO Auto-generated method stub
