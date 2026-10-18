@@ -60,7 +60,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user == null || user.getEmailVerifiedAt() != null;
+        return true;
     }
 
     @Override

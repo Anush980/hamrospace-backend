@@ -48,5 +48,10 @@
     "name": "app.email.from-name",
     "type": "java.lang.String",
     "description": "A description for 'app.email.from-name'"
+  },
+  {
+    "name": "app.jwt.refresh-key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.refresh-key'"
   }
 ]}

@@ -1,0 +1,62 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:10}
+      minimum-idle: ${HIKARI_MIN_IDLE:2}
+
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+
+  jackson:
+    time-zone: UTC
+    deserialization:
+      fail-on-unknown-properties: true
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  servlet:
+    context-path: /api
+  port: ${PORT:8080}
+
+app:
+  jwt:
+    access-key: ${ACCESS_KEY}
+    refresh-key: ${REFRESH_KEY}
+    access-expiration: ${ACCESS_KEY_EXPIRATION:15m}
+    refresh-expiration: ${REFRESH_KEY_EXPIRATION:2d}
+    short-refresh-expiration: ${SHORT_REFRESH_KEY_EXPIRATION:2h}
+    issuer: ${JWT_ISSUER:HamroSpace}
+
+  cors:
+    allowed-origins: ${CORS_ORIGINS}
+
+  email:
+    from-address: ${EMAIL_FROM}
+    from-name: ${EMAIL_FROM_NAME}
+    resend-api-key: ${RESEND_API_KEY}
+
+springdoc:
+  swagger-ui:
+    enabled: false
+    
+  api-docs:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+      
+
+        
