@@ -20,6 +20,14 @@ public interface RefreshTokenRepository extends AbstractRepository<RefreshToken>
     List<RefreshToken> findByUser(User user);
 
     @Modifying
+    @Query("UPDATE RefreshToken r SET r.revoked = true, r.revokedAt = :now WHERE r.user = :user AND r.deviceInfo = :deviceInfo AND r.revoked = false")
+    void revokeActiveTokensByUserAndDevice(
+        @Param("user") User user, 
+        @Param("deviceInfo") String deviceInfo, 
+        @Param("now") Instant now
+    );
+
+    @Modifying
     @Query("UPDATE RefreshToken r SET r.revoked = true, r.revokedAt = :now WHERE r.user = :user AND r.revoked = false")
     void revokeAllActiveTokensByUser(@Param("user") User user, @Param("now") Instant now); 
 }

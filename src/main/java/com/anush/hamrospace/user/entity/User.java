@@ -32,14 +32,14 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
      @Column(nullable = false)
-    private UserRole userRole;
+    private UserRole userRole=UserRole.USER;
 
     @Column(nullable = false)
     private boolean isEmailVerified;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SubscriptionType subscriptionType;
+    private SubscriptionType subscriptionType=SubscriptionType.FREE;
 
     private Instant emailVerifiedAt;
 

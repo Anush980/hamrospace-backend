@@ -38,6 +38,9 @@ public class RefreshToken extends BaseEntity {
     @Column(nullable = false)
     private boolean revoked = false; 
 
+    @Column(nullable = false)
+    private boolean rememberMe;
+
     @Column(name = "revoked_at")
     private Instant revokedAt;
 
