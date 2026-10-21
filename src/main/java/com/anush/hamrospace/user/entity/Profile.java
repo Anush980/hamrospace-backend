@@ -41,10 +41,10 @@ public class Profile extends BaseEntity {
     private String bio;
 
     @Enumerated(EnumType.STRING)
-    private PreferredLanguage preferredLanguage;
+    private PreferredLanguage preferredLanguage=PreferredLanguage.ENGLISH;
 
     @Enumerated(EnumType.STRING)
-    private UiTheme uiTheme;
+    private UiTheme uiTheme=UiTheme.SYSTEM;
 
 
 }

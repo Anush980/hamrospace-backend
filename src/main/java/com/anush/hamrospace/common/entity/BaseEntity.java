@@ -32,11 +32,11 @@ public abstract class BaseEntity {
     private UUID id;
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false,nullable = false)
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", updatable = true)
+    @Column(name = "updated_at", updatable = true,nullable = false)
     private Instant updatedAt;
 
     @Column(name = "deleted_at")
