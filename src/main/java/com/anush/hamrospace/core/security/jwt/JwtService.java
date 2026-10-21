@@ -1,4 +1,4 @@
-package com.anush.hamrospace.core.security.jwt.impl;
+package com.anush.hamrospace.core.security.jwt;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

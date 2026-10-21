@@ -1,14 +1,12 @@
 package com.anush.hamrospace.core.config.jwt;
 
 import java.time.Duration;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @ConfigurationProperties(prefix = "app.jwt")
 public class JwtProperties {
     

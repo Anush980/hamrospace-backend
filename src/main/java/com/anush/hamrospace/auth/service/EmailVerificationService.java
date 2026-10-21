@@ -6,6 +6,8 @@ public interface EmailVerificationService {
 
     String validateVerificationToken(String token);
 
-    void resendVerificationEmail(String email);
+    void resendVerificationEmail();
+
+    void verifyEmail(String token);
 
 }

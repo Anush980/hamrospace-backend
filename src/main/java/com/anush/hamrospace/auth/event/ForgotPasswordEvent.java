@@ -1,5 +1,6 @@
 package com.anush.hamrospace.auth.event;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public record ForgotPasswordEvent(
@@ -7,7 +8,7 @@ public record ForgotPasswordEvent(
     String email,
     String fullName,
     String token,
-    int exipresAt
+    Instant expiresAt
 ) {
     
 }

@@ -9,7 +9,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.anush.hamrospace.core.security.jwt.impl.JwtService;
+import com.anush.hamrospace.core.security.jwt.JwtService;
 import com.anush.hamrospace.core.security.service.CustomUserDetailsService;
 
 import jakarta.servlet.FilterChain;

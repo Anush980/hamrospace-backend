@@ -1,5 +1,6 @@
 package com.anush.hamrospace.auth.service.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
@@ -16,7 +17,7 @@ import com.anush.hamrospace.auth.repository.RefreshTokenRepository;
 import com.anush.hamrospace.auth.service.TokenLifeCycleService;
 import com.anush.hamrospace.core.config.jwt.JwtProperties;
 import com.anush.hamrospace.core.exception.http.UnauthorizedException;
-import com.anush.hamrospace.core.security.jwt.impl.JwtService;
+import com.anush.hamrospace.core.security.jwt.JwtService;
 import com.anush.hamrospace.core.security.user.UserPrincipal;
 import com.anush.hamrospace.core.security.util.ClientMetaDataUtils;
 import com.anush.hamrospace.core.security.util.SecurityUtil;
@@ -72,7 +73,7 @@ public class TokenLifeCycleServiceImpl implements TokenLifeCycleService {
                 user.isEmailVerified(),
                 fullName,
                 user.getEmail(),
-                user.getUserRole().name());
+                user.getRole().name());
     }
 
 @Override
@@ -107,7 +108,7 @@ public class TokenLifeCycleServiceImpl implements TokenLifeCycleService {
     private String hashToken(String token) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(token.getBytes());
+            byte[] hash = md.digest(token.getBytes(StandardCharsets.UTF_8));
             return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 not available", e);

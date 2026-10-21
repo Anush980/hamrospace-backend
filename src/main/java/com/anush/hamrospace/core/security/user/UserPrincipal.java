@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.anush.hamrospace.user.entity.User;
 import com.anush.hamrospace.user.enums.UserRole;
+import com.anush.hamrospace.user.enums.UserStatus;
 
 import lombok.Getter;
 
@@ -21,24 +22,27 @@ public class UserPrincipal implements UserDetails {
     private final UUID id;
     private final String email;
     private final UserRole role;
+    private final UserStatus status;
 
     public UserPrincipal(User user) {
         this.user = user;
         this.id = user.getId();
         this.email = user.getEmail();
-        this.role = user.getUserRole();
+        this.role = user.getRole();
+        this.status= user.getStatus();
     }
 
-    public UserPrincipal(UUID id, String email, UserRole role) {
+    public UserPrincipal(UUID id, String email, UserRole role,UserStatus status) {
         this.user = null;
         this.id = id;
         this.email = email;
         this.role = role;
+        this.status = status;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRole activeRole = (role != null) ? role : (user != null) ? user.getUserRole() : UserRole.USER;
+        UserRole activeRole = (role != null) ? role : (user != null) ? user.getRole() : UserRole.USER;
         return List.of(new SimpleGrantedAuthority("ROLE_" + activeRole.name()));
 
     }
@@ -60,7 +64,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return status==UserStatus.ACTIVE;
     }
 
     @Override

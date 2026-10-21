@@ -1,6 +1,5 @@
 package com.anush.hamrospace.auth.service;
 
-import com.anush.hamrospace.auth.dto.request.ChangePasswordRequest;
 import com.anush.hamrospace.auth.dto.request.LoginRequest;
 import com.anush.hamrospace.auth.dto.request.RefreshTokenRequest;
 import com.anush.hamrospace.auth.dto.request.RegisterRequest;
@@ -13,8 +12,6 @@ public interface AuthService {
     AuthResponse login(LoginRequest loginRequest);
 
     void logout(RefreshTokenRequest refreshTokenRequest);
-
-    void changePassword(ChangePasswordRequest changePasswordRequest);
 
     // void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 

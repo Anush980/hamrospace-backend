@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.anush.hamrospace.common.entity.BaseEntity;
 import com.anush.hamrospace.user.enums.SubscriptionType;
 import com.anush.hamrospace.user.enums.UserRole;
+import com.anush.hamrospace.user.enums.UserStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,8 +32,8 @@ public class User extends BaseEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-     @Column(nullable = false)
-    private UserRole userRole=UserRole.USER;
+    @Column(nullable = false)
+    private UserRole role=UserRole.USER;
 
     @Column(nullable = false)
     private boolean isEmailVerified;
@@ -46,6 +47,10 @@ public class User extends BaseEntity {
     private Instant lastLoginAt;
 
     private Instant termsAcceptedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status=UserStatus.ACTIVE;
 
     private String blockedReason;
 

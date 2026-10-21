@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import com.anush.hamrospace.auth.repository.EmailVerificationTokenRepository;
 import com.anush.hamrospace.auth.service.EmailVerificationService;
 import com.anush.hamrospace.core.exception.http.BadRequestException;
 import com.anush.hamrospace.core.exception.http.ResourceNotFoundException;
+import com.anush.hamrospace.core.security.util.SecurityUtil;
 import com.anush.hamrospace.user.entity.User;
 import com.anush.hamrospace.user.repository.UserRepository;
 
@@ -27,21 +29,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailVerificationServiceImpl implements EmailVerificationService {
 
+    private static final int TOKEN_EXPIRY_MINUTES = 15;
+    private static final Duration TOKEN_EXPIRY_DURATION = Duration.ofMinutes(TOKEN_EXPIRY_MINUTES);
+
     private final UserRepository userRepository;
     private final SecureRandom secureRandom;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private final int TOKEN_EXPIRY_MINUTE=15;
-    private final Duration TOKEN_EXPIRY_DURATION = Duration.ofMinutes(TOKEN_EXPIRY_MINUTE);
 
     @Override
     public String generateVerificationToken(String email) {
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Instant now = Instant.now();
         emailVerificationTokenRepository.invalidateAllByUser(user, now);
+        
         String otp = generateOtp();
 
         EmailVerificationToken token = new EmailVerificationToken();
@@ -49,52 +52,75 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         token.setUser(user);
         token.setExpiryDate(now.plus(TOKEN_EXPIRY_DURATION));
         emailVerificationTokenRepository.save(token);
+        
         return otp;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String validateVerificationToken(String token) {
-        String hashedToken = hashToken(token);
-
-        EmailVerificationToken stored = emailVerificationTokenRepository.findByToken(hashedToken).orElseThrow(()-> new BadRequestException("Invalid or expired token"));
-
-        if (stored.isDeleted() || stored.isExpired() || stored.isUsed()) {
-            throw new BadRequestException("Invalid or expired token");
-        }
+        EmailVerificationToken stored = getValidToken(token);
         return stored.getUser().getEmail();
     }
 
     @Override
-    public void resendVerificationEmail(String email) {
+    public void resendVerificationEmail() {
+        String email = SecurityUtil.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-                if(user.isEmailVerified()){
-                    throw new BadRequestException("Email is already verified");
-                }
+        if (user.isEmailVerified()) {
+            throw new BadRequestException("Email is already verified");
+        }
 
-                String token = generateVerificationToken(email);
-                Instant expiresAt = Instant.now().plus(TOKEN_EXPIRY_DURATION);
+        String otp = generateVerificationToken(email);
+        Instant expiresAt = Instant.now().plus(TOKEN_EXPIRY_DURATION);
 
-                eventPublisher.publishEvent(new ResendEmailVerificationEvent(user.getId(), email, user.getProfile().getFullName(), token,expiresAt ));
+        eventPublisher.publishEvent(new ResendEmailVerificationEvent(
+                user.getId(), email, user.getProfile().getFullName(), otp, expiresAt));
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        EmailVerificationToken storedToken = getValidToken(token);
+        User user = storedToken.getUser();
+
+        if (!user.isEmailVerified()) {
+            user.setEmailVerified(true);
+            user.setEmailVerifiedAt(Instant.now());
+            userRepository.save(user);
+        }
+
+        storedToken.setUsedAt(Instant.now());
+        emailVerificationTokenRepository.save(storedToken);
+    }
+
+    private EmailVerificationToken getValidToken(String rawToken) {
+        String hashedToken = hashToken(rawToken);
+
+        EmailVerificationToken stored = emailVerificationTokenRepository.findByToken(hashedToken)
+                .orElseThrow(() -> new BadRequestException("Invalid or expired token"));
+
+        if (stored.isDeleted() || stored.isExpired() || stored.isUsed()) {
+            throw new BadRequestException("Invalid or expired token");
+        }
+
+        return stored;
     }
 
     private String generateOtp() {
-
-        // Generates a random number between 0 and 999999
         int otpInt = secureRandom.nextInt(1_000_000);
-        // Formats it with leading zeros so it's always strictly 6 characters
         return String.format("%06d", otpInt);
     }
 
     private String hashToken(String token) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(token.getBytes());
+            // Standardize charset explicitly
+            byte[] hash = md.digest(token.getBytes(StandardCharsets.UTF_8));
             return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 not available", e);
+            throw new IllegalStateException("SHA-256 algorithm not available", e);
         }
     }
-
 }

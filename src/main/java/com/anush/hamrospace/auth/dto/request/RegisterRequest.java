@@ -12,7 +12,7 @@ public record RegisterRequest(
 
         @NotBlank(message = "Password is required") @Size(min = 8, max = 50, message = "Password must be at least 8 characters") String password,
 
-        @AssertTrue(message = "You must accept the terms and conditions") boolean termsAccepted
+        @AssertTrue(message = "You must accept the terms and conditions") Boolean termsAccepted
 
 ) {
 
