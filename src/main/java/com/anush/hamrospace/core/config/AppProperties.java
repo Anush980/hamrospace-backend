@@ -11,4 +11,6 @@ import lombok.RequiredArgsConstructor;
 public class AppProperties {
     
     private final String name;
+    private final String frontendUrl;
+    private final String otpExpiryMinutes = "15";
 }

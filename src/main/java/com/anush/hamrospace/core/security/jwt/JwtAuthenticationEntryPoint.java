@@ -41,5 +41,21 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                     ApiResponse.fail("Authentication required", ErrorCodes.AUTH_REQUIRED));
         }
     }
+// @Override
+// public void commence(HttpServletRequest request, HttpServletResponse response,
+//                      AuthenticationException authException) throws IOException {
 
+//     boolean jwtFailure = Boolean.TRUE.equals(request.getAttribute("jwt-auth-failure"));
+
+//     ApiResponse<?> body = jwtFailure
+//             ? ApiResponse.fail("Invalid or expired token", ErrorCodes.INVALID_OR_EXPIRED_TOKEN)
+//             : ApiResponse.fail("Authentication required", ErrorCodes.AUTH_REQUIRED);
+
+//     String json = objectMapper.writeValueAsString(body); // fails here, before anything is sent
+
+//     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//     response.setCharacterEncoding("UTF-8");
+//     response.getWriter().write(json);
+// }
 }

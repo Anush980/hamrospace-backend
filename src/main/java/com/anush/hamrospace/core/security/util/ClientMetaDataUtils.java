@@ -54,6 +54,10 @@ public class ClientMetaDataUtils {
             return "Android Mobile";
         if (ua.contains("linux"))
             return "Linux Desktop";
+        if (ua.contains("postman"))
+            return "Postman API Client";
+        if (ua.contains("bruno"))
+            return "Bruno API Client";
 
         return "Web Browser";
     }

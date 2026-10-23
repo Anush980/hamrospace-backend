@@ -61,8 +61,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
             throw new BadRequestException("Current password is incorrect");
         }
-
-        if (!passwordEncoder.matches(request.newPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
             throw new BadRequestException("New password cannot be same as the old password");
         }
 

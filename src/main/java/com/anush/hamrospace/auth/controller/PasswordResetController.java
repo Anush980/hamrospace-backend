@@ -35,6 +35,7 @@ public class PasswordResetController {
     @Operation(summary = "Send your forgot password otp email")
     @PostMapping(ApiPath.FORGOT_PASSWORD)
     public ApiResponse<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.forgotPassword(request);
         return ApiResponse.ok("If the email exists, a reset link has been sent");
     }
 

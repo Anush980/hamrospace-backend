@@ -3,7 +3,7 @@ package com.anush.hamrospace.auth.event;
 import java.time.Instant;
 import java.util.UUID;
 
-public record ResendEmailVerificationEvent(
+public record EmailVerificationEvent(
      UUID userId,
     String email,
     String fullName,

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.anush.hamrospace.auth.entity.EmailVerificationToken;
-import com.anush.hamrospace.auth.event.ResendEmailVerificationEvent;
+import com.anush.hamrospace.auth.event.EmailVerificationEvent;
 import com.anush.hamrospace.auth.repository.EmailVerificationTokenRepository;
 import com.anush.hamrospace.auth.service.EmailVerificationService;
 import com.anush.hamrospace.core.exception.http.BadRequestException;
@@ -76,7 +76,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         String otp = generateVerificationToken(email);
         Instant expiresAt = Instant.now().plus(TOKEN_EXPIRY_DURATION);
 
-        eventPublisher.publishEvent(new ResendEmailVerificationEvent(
+        eventPublisher.publishEvent(new EmailVerificationEvent(
                 user.getId(), email, user.getProfile().getFullName(), otp, expiresAt));
     }
 
