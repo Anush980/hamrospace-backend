@@ -2,40 +2,35 @@ package com.anush.hamrospace.user.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
+import com.anush.hamrospace.common.mapper.MapStructMapperHelper;
+import com.anush.hamrospace.common.storage.util.DefaultImageMapper;
 import com.anush.hamrospace.user.dto.request.ProfileRequest;
 import com.anush.hamrospace.user.dto.response.UserProfileDetailedResponse;
 import com.anush.hamrospace.user.dto.response.UserProfileSummaryResponse;
+import com.anush.hamrospace.user.entity.Profile;
 import com.anush.hamrospace.user.entity.User;
 
-@Mapper(componentModel = "spring",nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring",uses = {DefaultImageMapper.class,MapStructMapperHelper.class},nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserProfileMapper {
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "email", source = "user.email")
-    @Mapping(target = "fullName", source = "user.profile.fullName")
-    @Mapping(target = "profileImageUrl", source = "user.profile.profileImageUrl")
-    @Mapping(target = "preferredLanguage", source = "user.profile.preferredLanguage")
-    @Mapping(target = "uiTheme", source = "user.profile.uiTheme")
-    UserProfileSummaryResponse toSummaryResponse(User user);
+    @Mapping(source = "profile.profileImageUrl",target = "profileImageUrl", qualifiedByName = "toAvatarImageUrl",conditionExpression = DefaultImageMapper.ALWAYS_RESOLVE_IMAGE)
+    UserProfileSummaryResponse toSummaryResponse(User user,Profile profile);
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "email", source = "user.email")
-    @Mapping(target = "fullName", source = "user.profile.fullName")
-    @Mapping(target = "phoneNumber", source = "user.profile.phoneNumber")
-    @Mapping(target = "addressType", source = "user.profile.addressType")
-    @Mapping(target = "address", source = "user.profile.address")
-    @Mapping(target = "profileImageUrl", source = "user.profile.profileImageUrl")
-    @Mapping(target = "bio", source = "user.profile.bio")
-    @Mapping(target = "preferredLanguage", source = "user.profile.preferredLanguage")
-    @Mapping(target = "uiTheme", source = "user.profile.uiTheme")
-    @Mapping(target = "subscriptionType",source = "user.subscriptionType")
-    @Mapping(target = "isEmailVerified", source = "user.emailVerified")
-    @Mapping(target = "createdAt", source = "user.profile.createdAt")
-    @Mapping(target = "updatedAt", source = "user.profile.updatedAt")
-    UserProfileDetailedResponse toDetailedResponse(User user);
+    @Mapping(target = "createdAt", source = "profile.createdAt")
+    @Mapping(target = "updatedAt", source = "profile.updatedAt")
+     @Mapping(source = "profile.profileImageUrl",target = "profileImageUrl", qualifiedByName = "toAvatarImageUrl",conditionExpression = DefaultImageMapper.ALWAYS_RESOLVE_IMAGE)
+    @Mapping(target = "isEmailVerified",ignore = true)
+    UserProfileDetailedResponse toDetailedResponse(User user,Profile profile);
 
 
+    @Mapping(target = "id", ignore = true)
     User toEntity(ProfileRequest request);
+
+    @Mapping(target = "id", ignore = true)
+    void updateProfile(ProfileRequest request,@MappingTarget Profile profile);
 }

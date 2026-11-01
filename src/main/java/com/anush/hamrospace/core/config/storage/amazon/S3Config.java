@@ -18,13 +18,15 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 @Configuration
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "app.storage.provider", havingValue = "s3")
-public class s3Config {
+public class S3Config {
 
-    private final StorageProperties.S3Properties s3Properties;
+    private final StorageProperties storageProperties;
 
     @Bean
     public S3Client s3Client() {
 
+        StorageProperties.S3Properties s3Properties = storageProperties.getS3();
+        
         AwsBasicCredentials credentials = AwsBasicCredentials.create(s3Properties.getAccessKey(),
                 s3Properties.getSecretKey());
 

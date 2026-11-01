@@ -47,4 +47,10 @@ public class AuthController {
         authService.logout(refreshTokenRequest);
         return ApiResponse.ok("Logout successful");
     }
+
+    @Operation(summary = "Refresh token")
+    @PostMapping(ApiPath.REFRESH_TOKEN)
+    public ApiResponse<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
+        return ApiResponse.ok("Token Refreshed",authService.refreshToken(refreshTokenRequest));
+    }
 }

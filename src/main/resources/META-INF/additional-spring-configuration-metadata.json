@@ -108,5 +108,10 @@
     "name": "app.storage.s3.public-domain",
     "type": "java.lang.String",
     "description": "A description for 'app.storage.s3.public-domain'"
+  },
+  {
+    "name": "app.storage.allowed-extensions",
+    "type": "java.lang.String",
+    "description": "A description for 'app.storage.allowed-extensions'"
   }
 ]}

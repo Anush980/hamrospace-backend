@@ -12,7 +12,7 @@ public interface ProfileService {
 
     UserProfileDetailedResponse updateMyProfile(ProfileRequest request);
 
-    UserProfileSummaryResponse getMySummaryProfile();
+    UserProfileSummaryResponse getMyProfileSummary();
 
     UserProfileDetailedResponse uploadProfileImage(MultipartFile file);
     UserProfileDetailedResponse removeProfileImage();

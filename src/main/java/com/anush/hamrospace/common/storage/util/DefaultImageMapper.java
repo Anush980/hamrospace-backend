@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefaultImageMapper {
 
+public static final String ALWAYS_RESOLVE_IMAGE = "java(true)";
+
     private String avatar = "defaults/avatar.png";
     
     public final StorageService storageService;

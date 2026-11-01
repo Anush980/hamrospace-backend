@@ -25,7 +25,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class S3StorageServiceImpl implements StorageService {
 
     private final S3Client s3Client;
-    private final StorageProperties.S3Properties storageProperties;
+    private final StorageProperties storageProperties;
     private final StorageHelper storageHelper;
     private final long MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -46,7 +46,7 @@ public class S3StorageServiceImpl implements StorageService {
         String objectKey = cleanFolder.isEmpty() ? fileName : cleanFolder + "/" + fileName;
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(storageProperties.getBucketName())
+                    .bucket(storageProperties.getS3().getBucketName())
                     .key(objectKey)
                     .contentType(file.getContentType())
                     .build();
@@ -76,7 +76,7 @@ public class S3StorageServiceImpl implements StorageService {
 
         try {
             DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(storageProperties.getBucketName())
+                    .bucket(storageProperties.getS3().getBucketName())
                     .key(relativePath)
                     .build();
 
@@ -102,7 +102,7 @@ public class S3StorageServiceImpl implements StorageService {
             return pathToUse;
         }
 
-        String publicDomain = storageProperties.getPublicDomain();
+        String publicDomain = storageProperties.getS3().getPublicDomain();
         if (publicDomain.endsWith("/")) {
             publicDomain = publicDomain.substring(0, publicDomain.length() - 1);
         }

@@ -99,4 +99,10 @@ public class AuthServiceImpl implements AuthService {
         tokenLifeCycleService.logout(refreshTokenRequest);
     }
 
+    @Override
+    public AuthResponse refreshToken(RefreshTokenRequest request) {
+       return tokenLifeCycleService.refreshToken(request);
+    }
+    
+
 }
