@@ -38,4 +38,6 @@ public class ApiPath {
 
     // Security
     public static final String TOKEN_TYPE = "Bearer";
+
+    public static final String AMENITY ="/amenities";
 }
