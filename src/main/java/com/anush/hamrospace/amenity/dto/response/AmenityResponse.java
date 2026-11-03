@@ -7,8 +7,8 @@ public record AmenityResponse(
     String name,
     String description,
     String iconUrl,
-    boolean isFeatured,
-    boolean isActive
+    boolean featured,
+    boolean active
 ) {
     
 }

@@ -10,11 +10,12 @@ import com.anush.hamrospace.common.pagination.PaginationRequest;
 
 public interface AmenityService {
 
-    PageResponse<AmenityResponse>  getAllAmenities(AmenityFilterRequest filterRequest,PaginationRequest paginationRequest);
+    PageResponse<AmenityResponse> getAllAmenities(AmenityFilterRequest filterRequest,
+            PaginationRequest paginationRequest);
 
     AmenityResponse createAmenity(AmenityRequest request);
 
-    AmenityResponse updateAmentiy(AmenityRequest request);
+    AmenityResponse updateAmenity(UUID id, AmenityRequest request);
 
     AmenityResponse toggleActiveStatus(UUID id);
 

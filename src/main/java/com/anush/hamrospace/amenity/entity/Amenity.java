@@ -24,9 +24,9 @@ public class Amenity extends BaseEntity {
     private String iconUrl;
 
     @Column(name = "is_featured", nullable = false)
-    private boolean isFeatured = false; // Show in quick search filters & property card highlights
+    private boolean featured = false; 
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    private boolean active=true;
 
 }
