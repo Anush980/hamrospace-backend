@@ -3,7 +3,6 @@ package com.anush.hamrospace.amenity.specification;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;

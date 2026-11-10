@@ -16,7 +16,7 @@ import com.anush.hamrospace.auth.entity.RefreshToken;
 import com.anush.hamrospace.auth.repository.RefreshTokenRepository;
 import com.anush.hamrospace.auth.service.TokenLifeCycleService;
 import com.anush.hamrospace.core.config.jwt.JwtProperties;
-import com.anush.hamrospace.core.exception.http.UnauthorizedException;
+import com.anush.hamrospace.core.exception.http.UnauthorizedAccessException;
 import com.anush.hamrospace.core.security.jwt.JwtService;
 import com.anush.hamrospace.core.security.user.UserPrincipal;
 import com.anush.hamrospace.core.security.util.ClientMetaDataUtils;
@@ -80,11 +80,11 @@ public class TokenLifeCycleServiceImpl implements TokenLifeCycleService {
     public AuthResponse refreshToken(RefreshTokenRequest request) {
        
         RefreshToken savedToken = refreshTokenRepository.findByToken(hashToken(request.refreshToken()))
-                .orElseThrow(() -> new UnauthorizedException("Refresh token expired or invalid"));
+                .orElseThrow(() -> new UnauthorizedAccessException("Refresh token expired or invalid"));
 
         
         if (savedToken.isExpired() || savedToken.isRevoked() || savedToken.isDeleted()) {
-            throw new UnauthorizedException("Refresh token expired or invalid");
+            throw new UnauthorizedAccessException("Refresh token expired or invalid");
         }
 
         User user = savedToken.getUser();

@@ -168,10 +168,11 @@ public class GlobalExceptionHandler {
 
     //  Unsupported Media Type (e.g., sending JSON instead of Multipart) ─────────
 
-    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiResponse<Void>> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex) {
         String supportedTypes = ex.getSupportedMediaTypes().stream()
-                .map(Object::toString)
+                .filter(mediaType -> mediaType != null) // Ensure non-null media type
+                .map(mediaType -> mediaType.toString()) // Explicit lambda instead of method reference
                 .reduce((a, b) -> a + ", " + b)
                 .orElse("multipart/form-data");
 

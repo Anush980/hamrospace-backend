@@ -40,4 +40,6 @@ public class ApiPath {
     public static final String TOKEN_TYPE = "Bearer";
 
     public static final String AMENITY ="/amenities";
+
+    public static final String LISTING= "/listings";
 }

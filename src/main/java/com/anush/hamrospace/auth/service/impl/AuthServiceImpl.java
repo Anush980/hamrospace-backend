@@ -17,7 +17,7 @@ import com.anush.hamrospace.auth.service.EmailVerificationService;
 import com.anush.hamrospace.auth.service.TokenLifeCycleService;
 import com.anush.hamrospace.core.exception.http.BadRequestException;
 import com.anush.hamrospace.core.exception.http.ConflictException;
-import com.anush.hamrospace.core.exception.http.UnauthorizedException;
+import com.anush.hamrospace.core.exception.http.UnauthorizedAccessException;
 import com.anush.hamrospace.user.entity.Profile;
 import com.anush.hamrospace.user.entity.User;
 import com.anush.hamrospace.user.enums.UserStatus;
@@ -74,18 +74,18 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(LoginRequest loginRequest) {
 
         User user = userRepository.findByEmailWithProfile(loginRequest.email())
-                .orElseThrow(() -> new UnauthorizedException("Invalid email or password"));
+                .orElseThrow(() -> new UnauthorizedAccessException("Invalid email or password"));
 
         if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
-            throw new UnauthorizedException("Invalid email or password");
+            throw new UnauthorizedAccessException("Invalid email or password");
         }
 
         if (user.getStatus() == UserStatus.SUSPENDED) {
-            throw new UnauthorizedException("Your account has been temporarily suspended");
+            throw new UnauthorizedAccessException("Your account has been temporarily suspended");
         }
 
         if (user.getStatus() == UserStatus.BLOCKED) {
-            throw new UnauthorizedException("Your account has been blocked");
+            throw new UnauthorizedAccessException("Your account has been blocked");
         }
 
         boolean rememberMe = Boolean.TRUE.equals(loginRequest.rememberMe());

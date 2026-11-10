@@ -21,8 +21,6 @@ import com.anush.hamrospace.common.pagination.PaginationRequest;
 import com.anush.hamrospace.common.pagination.PaginationUtil;
 import com.anush.hamrospace.core.exception.http.BadRequestException;
 import com.anush.hamrospace.core.exception.http.ResourceNotFoundException;
-import com.anush.hamrospace.core.security.util.SecurityUtil;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
