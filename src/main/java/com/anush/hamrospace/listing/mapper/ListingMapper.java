@@ -13,21 +13,22 @@ import com.anush.hamrospace.listing.dto.response.ListingSummaryResponse;
 import org.mapstruct.MappingTarget;
 import com.anush.hamrospace.listing.entity.Listing;
 
-@Mapper(componentModel = "spring",uses = {DefaultImageMapper.class,MapStructMapperHelper.class},nullValuePropertyMappingStrategy=NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring", uses = { DefaultImageMapper.class,
+        MapStructMapperHelper.class }, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ListingMapper {
-
 
     @Mapping(target = "coverImageUrl", expression = "java(list.getCoverImageUrl())")
     ListingSummaryResponse toSummaryResponse(Listing list);
 
-   @Mapping(target = "host.userId",source = "host.id")
-   @Mapping(target = "host.fullName",source="host.profile.fullName")
-   @Mapping(target = "host.profileImageUrl",source = "host.profile.profileImageUrl")
+    @Mapping(target = "host.userId", source = "host.id")
+    @Mapping(target = "host.fullName", source = "host.profile.fullName")
+    @Mapping(target = "host.profileImageUrl", source = "host.profile.profileImageUrl")
     ListingDetailedResponse toDetailedResponse(Listing list);
 
-
+    @Mapping(target = "amenities", ignore = true)
     Listing toEntity(ListingCreateRequest request);
 
-    void updateListing(ListingUpdateRequest request,@MappingTarget Listing listing);
-    
+    @Mapping(target = "amenities", ignore = true)
+    void updateListing(ListingUpdateRequest request, @MappingTarget Listing listing);
+
 }

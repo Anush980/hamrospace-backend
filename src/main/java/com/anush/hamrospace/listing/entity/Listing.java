@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.geo.Point;
+
 import com.anush.hamrospace.amenity.entity.Amenity;
 import com.anush.hamrospace.common.entity.BaseEntity;
 import com.anush.hamrospace.listing.enums.ListingStatus;
@@ -70,11 +72,8 @@ public class Listing extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private Double latitude;
-
-    @Column(nullable = false)
-    private Double longitude;
+    @Column(nullable = false, columnDefinition = "geometry(Point, 4326)")
+    private Point coordinates;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -119,6 +118,9 @@ public class Listing extends BaseEntity {
     @Column(name = "is_available", nullable = false)
     private boolean available = true;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean active= true;
+
     @Column(name = "average_rating", precision = 3, scale = 2, nullable = false)
     private BigDecimal averageRating = BigDecimal.ZERO;
 
@@ -147,4 +149,12 @@ public String getCoverImageUrl() {
             .findFirst()
             .orElseGet(() -> images.isEmpty() ? null : images.get(0).getImageUrl());
 }
+
+public Double getLatitude() {
+        return coordinates != null ? coordinates.getY() : null;
+    }
+
+    public Double getLongitude() {
+        return coordinates != null ? coordinates.getX() : null;
+    }
 }
