@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.data.geo.Point;
-
 import com.anush.hamrospace.listing.enums.ListingStatus;
 import com.anush.hamrospace.listing.enums.PricingType;
 import com.anush.hamrospace.listing.enums.PropertyType;

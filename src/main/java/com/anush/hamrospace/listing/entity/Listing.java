@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import com.anush.hamrospace.amenity.entity.Amenity;
 import com.anush.hamrospace.common.entity.BaseEntity;

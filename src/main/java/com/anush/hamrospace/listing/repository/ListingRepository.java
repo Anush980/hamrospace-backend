@@ -10,4 +10,5 @@ public interface ListingRepository extends AbstractRepository<Listing> {
     
 
     Optional<Listing> findByIdAndDeletedAtIsNull(UUID id);
+    long countByUserIdAndDeletedAtIsNull(UUID userId);
 }

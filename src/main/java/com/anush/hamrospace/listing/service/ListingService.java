@@ -12,11 +12,11 @@ import com.anush.hamrospace.listing.dto.response.ListingSummaryResponse;
 
 public interface ListingService {
     
-    PageResponse<ListingSummaryResponse> getAllListings(ListingFilterRequest filterRequest,PaginationRequest paginationRequest);
+    PageResponse<ListingSummaryResponse> getMyListings(ListingFilterRequest filterRequest,PaginationRequest paginationRequest);
 
     ListingDetailedResponse createListing(ListingCreateRequest request);
 
-    ListingDetailedResponse updateListing(ListingUpdateRequest request);
+    ListingDetailedResponse updateListing(UUID listingId,ListingUpdateRequest request);
 
     ListingSummaryResponse toggleActiveStatus(UUID listingId);
 
