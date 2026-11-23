@@ -1,10 +1,13 @@
 package com.anush.hamrospace.listing.service.impl;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import org.locationtech.jts.geom.Point;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.anush.hamrospace.common.dto.response.PageResponse;
 import com.anush.hamrospace.common.pagination.PaginationRequest;
@@ -29,6 +32,7 @@ import com.anush.hamrospace.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ListingServiceImpl implements ListingService {
 
@@ -44,9 +48,10 @@ public class ListingServiceImpl implements ListingService {
 
         UUID userId = SecurityUtil.getCurrentUserId();
         Pageable pageable = PaginationUtil.of(paginationRequest);
-        // Specification<Listing> spec =
-        throw new UnsupportedOperationException("Unimplemented method 'createListing'");
 
+        Page<Listing> listingsPage = listingRepository.findByHostIdAndDeletedAtIsNull(userId, pageable);
+
+        return PageResponse.from(listingsPage, listingMapper::toSummaryResponse);
     }
 
     @Override
@@ -94,14 +99,29 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     public ListingSummaryResponse toggleActiveStatus(UUID listingId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toggleActiveStatus'");
+        UUID userId = SecurityUtil.getCurrentUserId();
+        Listing existingListing = listingRepository.findByIdAndDeletedAtIsNull(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        if (!existingListing.getHost().getId().equals(userId)) {
+            throw new AccessDeniedException("You can only update your own listing");
+        }
+        existingListing.setActive(!existingListing.isActive());
+        Listing updatedListing = listingRepository.save(existingListing);
+        return listingMapper.toSummaryResponse(updatedListing);
     }
 
     @Override
     public void deleteListing(UUID listingId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteListing'");
+        UUID userId = SecurityUtil.getCurrentUserId();
+        Listing existingListing = listingRepository.findByIdAndDeletedAtIsNull(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        if (!existingListing.getHost().getId().equals(userId)) {
+            throw new AccessDeniedException("You can only update your own listing");
+        }
+        existingListing.setDeletedAt(Instant.now());
+        listingRepository.save(existingListing);
     }
 
 }
