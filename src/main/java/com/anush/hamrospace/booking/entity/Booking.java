@@ -18,7 +18,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +34,9 @@ public class Booking extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "guest_id", nullable = false)
     private User guest;
+
+    @Column(nullable = false)
+    private Integer numberOfGuests=1;
 
     @Column(name = "move_in_date", nullable = false)
     private Instant moveInDate;

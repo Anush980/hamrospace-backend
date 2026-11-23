@@ -10,8 +10,8 @@ import com.anush.hamrospace.user.entity.User;
 
 public interface BookingRepository extends AbstractRepository<Booking> {
     
-    List<Booking> findByListing(Listing listing);
+    List<Booking> findByListingAndDeletedAtIsNull(Listing listing);
 
-    List<Booking> findByGuest(User guest);
-    
+    List<Booking> findByGuestAndDeletedAtIsNull(User guest);
+
 }
