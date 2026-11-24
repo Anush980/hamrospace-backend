@@ -2,6 +2,7 @@ package com.anush.hamrospace.booking.dto.request;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
@@ -10,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 public record BookingCreateRequest(
     
     @NotNull(message = "Listing ID is required")
-    Long listingId,
+    UUID listingId,
 
     @NotNull(message = "Move-in date is required")
     @Future(message = "Move-in date must be in the future")

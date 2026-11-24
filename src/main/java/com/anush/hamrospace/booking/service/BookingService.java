@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import com.anush.hamrospace.booking.dto.request.BookingCancelRequest;
 import com.anush.hamrospace.booking.dto.request.BookingCreateRequest;
+import com.anush.hamrospace.booking.dto.request.BookingFilterRequest;
 import com.anush.hamrospace.booking.dto.response.BookingDetailedResponse;
 import com.anush.hamrospace.booking.dto.response.BookingSummaryResponse;
 import com.anush.hamrospace.common.dto.response.PageResponse;
+import com.anush.hamrospace.common.pagination.PaginationRequest;
 
 public interface BookingService {
 
@@ -19,9 +21,9 @@ public interface BookingService {
 
     BookingDetailedResponse markNoShow(UUID bookingId);
 
-    PageResponse<BookingSummaryResponse> getMyBookings();
+    PageResponse<BookingSummaryResponse> getMyBookings(BookingFilterRequest filterRequest,PaginationRequest paginationRequest);
 
-    BookingDetailedResponse getBookingById(UUID bookingId, UUID userId);
+    BookingDetailedResponse getBookingById(UUID bookingId);
 
     void markBookingFeePaid(UUID bookingId);
 }
