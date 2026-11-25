@@ -1,6 +1,7 @@
 package com.anush.hamrospace.user.repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,8 @@ import com.anush.hamrospace.user.enums.UserStatus;
 public interface UserRepository extends AbstractRepository<User> {
     
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByIdAndDeletedAtIsNull(UUID id);
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.profile WHERE u.email = :email AND u.deletedAt IS NULL")
     Optional<User> findByEmailWithProfile(@Param("email") String email);

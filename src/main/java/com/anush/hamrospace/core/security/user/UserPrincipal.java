@@ -59,6 +59,10 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
+        UserStatus activeStatus = (status != null) ? status : (user != null ? user.getStatus() : null);
+        if (activeStatus == UserStatus.BLOCKED || activeStatus == UserStatus.SUSPENDED) {
+            return false;
+        }
         return user == null || user.getBlockedAt() == null;
     }
 

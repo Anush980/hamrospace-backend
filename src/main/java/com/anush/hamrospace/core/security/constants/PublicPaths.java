@@ -31,6 +31,9 @@ public final class PublicPaths {
             // Public endpoints
             ApiPath.VERSION + ApiPath.PUBLIC + "/**",
 
+            // Public, read-only review listing for a listing (POST /v1/reviews stays authenticated)
+            ApiPath.VERSION + "/reviews/listing/**",
+
             // Error path — Spring Boot forwards here on exceptions; must be public
             "/error",
     };

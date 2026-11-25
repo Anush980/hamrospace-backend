@@ -15,5 +15,6 @@ public interface ListingRepository extends AbstractRepository<Listing> {
     Optional<Listing> findByIdAndDeletedAtIsNull(UUID id);
 
     Page<Listing> findByHostIdAndDeletedAtIsNull(UUID userId,Pageable pageable);
-    long countByUserIdAndDeletedAtIsNull(UUID userId);
+    long countByHostIdAndDeletedAtIsNull(UUID hostId);
+    boolean existsBySlug(String slug);
 }

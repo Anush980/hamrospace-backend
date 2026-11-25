@@ -86,21 +86,39 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        issuePasswordReset(user);
+    }
+
+    @Override
+    public void adminInitiatePasswordReset(UUID userId) {
+        User user = userRepository.findByIdAndDeletedAtIsNull(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        issuePasswordReset(user);
+    }
+
+    /**
+     * Creates a fresh OTP token and publishes the same event used by the
+     * self-service forgot-password flow. The OTP is never returned to callers.
+     */
+    private void issuePasswordReset(User user) {
         Instant now = Instant.now();
         passwordResetTokenRepository.invalidateAllByUser(user, now);
         String otp = generateOtp();
-
         Instant expiresAt = now.plus(TOKEN_EXPIRY_DURATION);
 
         PasswordResetToken token = new PasswordResetToken();
         token.setToken(hashToken(otp));
         token.setUser(user);
         token.setExpiryDate(expiresAt);
-
         passwordResetTokenRepository.save(token);
 
         eventPublisher.publishEvent(new ForgotPasswordEvent(user.getId(), user.getEmail(),
-                user.getProfile().getFullName(), otp, expiresAt));
+                fullNameOf(user), otp, expiresAt));
+    }
+
+    private String fullNameOf(User user) {
+        return user.getProfile() != null ? user.getProfile().getFullName() : null;
     }
 
     @Override
@@ -114,12 +132,12 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         PasswordResetToken stored = passwordResetTokenRepository.findByToken(hashedToken)
                 .orElseThrow(() -> new BadRequestException("Invalid or expired token"));
 
-        if (stored.isDeleted() || stored.isExpired() || stored.isUsed()) {
+        if (stored.isDeleted() || stored.isExpired() || stored.isUsed()
+                || stored.getUser() == null || !stored.getUser().getId().equals(user.getId())) {
             throw new BadRequestException("Invalid or expired token");
         }
 
         Instant now = Instant.now();
-        stored.setUser(user);
         stored.setUsedAt(now);
         passwordResetTokenRepository.save(stored);
 
@@ -130,12 +148,14 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
 
+        refreshTokenRepository.revokeAllActiveTokensByUser(user, now);
+
         String deviceInfo = clientMetaDataUtils.extractDeviceInfo(httpServletRequest);
         String ipAddress = clientMetaDataUtils.extractIpAddress(httpServletRequest);
         String userAgent = clientMetaDataUtils.extractUserAgent(httpServletRequest);
 
         eventPublisher
-                .publishEvent(new PasswordChangedEvent(user.getId(), user.getEmail(), user.getProfile().getFullName(),
+                .publishEvent(new PasswordChangedEvent(user.getId(), user.getEmail(), fullNameOf(user),
                         deviceInfo, ipAddress, userAgent));
     }
 

@@ -79,6 +79,9 @@ public class Listing extends BaseEntity {
     @Column(nullable = false)
     private ListingStatus status = ListingStatus.PENDING;
 
+    @Column(name = "rejection_reason", length = 500)
+    private String rejectionReason;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PricingType pricingType = PricingType.PER_MONTH;

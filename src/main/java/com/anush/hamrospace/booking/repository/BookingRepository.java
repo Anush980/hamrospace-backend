@@ -1,22 +1,20 @@
 package com.anush.hamrospace.booking.repository;
 
-import com.anush.hamrospace.booking.entity.Booking;
-import com.anush.hamrospace.common.repository.AbstractRepository;
-import java.util.List;
+import java.time.Instant;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.anush.hamrospace.listing.entity.Listing;
-import com.anush.hamrospace.user.entity.User;
-
-
+import com.anush.hamrospace.booking.entity.Booking;
+import com.anush.hamrospace.booking.enums.BookingStatus;
+import com.anush.hamrospace.common.repository.AbstractRepository;
 
 public interface BookingRepository extends AbstractRepository<Booking> {
 
-    Optional<Booking> findByIdAndUserIdAndDeletedAtIsNull(UUID bookingId,UUID userId);
-    
-    List<Booking> findByListingAndDeletedAtIsNull(Listing listing);
+    Optional<Booking> findByIdAndGuestIdAndDeletedAtIsNull(UUID bookingId, UUID userId);
 
-    List<Booking> findByGuestAndDeletedAtIsNull(User guest);
+    Optional<Booking> findByIdAndListingHostIdAndDeletedAtIsNull(UUID bookingId, UUID hostId);
 
+    boolean existsByListingIdAndMoveInDateAndStatusIn(UUID listingId, Instant moveInDate,
+            Collection<BookingStatus> statuses);
 }

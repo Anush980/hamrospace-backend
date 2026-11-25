@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.anush.hamrospace.listing.enums.ListingStatus;
 import com.anush.hamrospace.listing.enums.PricingType;
 import com.anush.hamrospace.listing.enums.PropertyType;
 import com.anush.hamrospace.listing.enums.RoomType;
@@ -36,11 +35,7 @@ public record ListingUpdateRequest(
 
     Double longitude,
 
-    ListingStatus status,
-
     PricingType pricingType,
-
-    Boolean verified,
 
     Boolean available,
 

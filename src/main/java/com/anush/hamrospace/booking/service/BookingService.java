@@ -1,6 +1,5 @@
 package com.anush.hamrospace.booking.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.anush.hamrospace.booking.dto.request.BookingCancelRequest;
@@ -16,6 +15,8 @@ public interface BookingService {
     BookingDetailedResponse createBooking(BookingCreateRequest request);
 
     BookingDetailedResponse cancelBooking(UUID bookingId, BookingCancelRequest request);
+
+    BookingDetailedResponse confirmBooking(UUID bookingId);
 
     BookingDetailedResponse confirmCheckIn(UUID bookingId);
 

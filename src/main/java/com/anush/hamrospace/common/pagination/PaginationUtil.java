@@ -1,5 +1,7 @@
 package com.anush.hamrospace.common.pagination;
 
+import java.util.Set;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -8,6 +10,12 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class PaginationUtil {
+
+    /** Never let a client sort on an arbitrary JPA property (PropertyReferenceException). */
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
+            "id", "createdAt", "updatedAt", "title", "slug", "rent", "status",
+            "available", "verified", "moveInDate", "monthlyRent", "bookingFeeAmount",
+            "email", "rating");
 
     public Pageable of(PaginationRequest request) {
 
@@ -44,9 +52,9 @@ public class PaginationUtil {
 
     private Sort sort(String sortBy, String direction) {
 
-        String field = (sortBy == null || sortBy.isBlank())
-                ? PaginationConfig.DEFAULT_SORT_FIELD
-                : sortBy;
+        String field = (sortBy != null && ALLOWED_SORT_FIELDS.contains(sortBy))
+                ? sortBy
+                : PaginationConfig.DEFAULT_SORT_FIELD;
 
         boolean isDesc = "desc".equalsIgnoreCase(direction);
 

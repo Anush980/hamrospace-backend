@@ -13,6 +13,7 @@ public class ApiPath {
 
     // Common params
     public static final String ID = "/{id}";
+    public static final String ME = "/me";
 
     // Auth actions
     public static final String REGISTER = "/register";
@@ -41,5 +42,9 @@ public class ApiPath {
 
     public static final String AMENITY ="/amenities";
 
+    public static final String BOOKING = "/bookings";
+
     public static final String LISTING= "/listings";
+    
+    public static final String REVIEW= "/reviews";
 }

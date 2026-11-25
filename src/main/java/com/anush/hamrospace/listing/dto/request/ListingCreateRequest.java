@@ -18,9 +18,6 @@ import jakarta.validation.constraints.Size;
 
 public record ListingCreateRequest(
 
-    @NotNull(message = "Host ID is required")
-    UUID hostId,
-
     @NotBlank(message = "Title is required")
     @Size(max = 255, message = "Title must not exceed 255 characters")
     String title,
@@ -47,7 +44,7 @@ public record ListingCreateRequest(
     Double longitude,
 
     @NotNull(message = "Pricing type is required")
-    PricingType pricingType, // Enums ensure type-safe request parsing
+    PricingType pricingType,
 
     @NotNull(message = "Property type is required")
     PropertyType propertyType,
@@ -64,7 +61,7 @@ public record ListingCreateRequest(
     @Min(value = 1, message = "Beds must be at least 1")
     Integer beds,
 
-    @DecimalMin(value = "0.5", message = "Bathrooms must be at least 0.5")
+    @DecimalMin(value = "1", message = "Bathrooms must be at least 1")
     Double bathrooms,
 
     Integer areaSqFt,

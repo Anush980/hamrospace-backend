@@ -50,7 +50,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if (jwtService.isAccessTokenValid(token, userDetails)) {
+                // A still-valid token must not keep a suspended/blocked user authenticated.
+                if (jwtService.isAccessTokenValid(token, userDetails)
+                        && userDetails.isEnabled() && userDetails.isAccountNonLocked()) {
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,

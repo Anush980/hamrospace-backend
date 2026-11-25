@@ -7,10 +7,12 @@ import com.anush.hamrospace.user.enums.AddressType;
 import com.anush.hamrospace.user.enums.PreferredLanguage;
 import com.anush.hamrospace.user.enums.SubscriptionType;
 import com.anush.hamrospace.user.enums.UiTheme;
+import com.anush.hamrospace.user.enums.UserRole;
 
 public record UserProfileDetailedResponse(
         UUID userId,
         String email,
+        UserRole role,
         String fullName,
         String phoneNumber,
         AddressType addressType,

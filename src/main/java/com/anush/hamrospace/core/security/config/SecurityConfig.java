@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.anush.hamrospace.common.constants.ApiPath;
@@ -38,6 +39,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(PublicPaths.PUBLIC_PATHS).permitAll()
+                        // Public listing browse/detail only. A UUID regex is used so that
+                        // GET /v1/listings/me stays authenticated.
+                        .requestMatchers(new RegexRequestMatcher("^/v1/listings/?$", "GET")).permitAll()
+                        .requestMatchers(new RegexRequestMatcher(
+                                "^/v1/listings/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                                "GET")).permitAll()
                         .requestMatchers(ApiPath.VERSION + ApiPath.ADMIN + "/**").hasRole("ADMIN")
                         .requestMatchers(ApiPath.VERSION + "/uploads/**").permitAll()
                         .anyRequest().authenticated())

@@ -21,7 +21,8 @@ public record ListingSummaryResponse(
     boolean available,
     BigDecimal averageRating,
     Integer reviewCount,
-    String coverImageUrl
+    String coverImageUrl,
+    String rejectionReason
 ) {
     
 }

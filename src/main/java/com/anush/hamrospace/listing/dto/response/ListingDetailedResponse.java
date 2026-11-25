@@ -43,6 +43,7 @@ public record ListingDetailedResponse(
         Set<AmenityResponse> amenities,
         HostResponse host,
         Instant createdAt,
-        Instant updatedAt) {
+        Instant updatedAt,
+        String rejectionReason) {
 
 }

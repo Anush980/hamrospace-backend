@@ -14,11 +14,18 @@ public interface ListingService {
     
     PageResponse<ListingSummaryResponse> getMyListings(ListingFilterRequest filterRequest,PaginationRequest paginationRequest);
 
+    PageResponse<ListingSummaryResponse> searchListings(ListingFilterRequest filterRequest,
+            PaginationRequest paginationRequest);
+
+    ListingDetailedResponse getListingById(UUID listingId);
+
     ListingDetailedResponse createListing(ListingCreateRequest request);
 
     ListingDetailedResponse updateListing(UUID listingId,ListingUpdateRequest request);
 
     ListingSummaryResponse toggleActiveStatus(UUID listingId);
+
+    ListingDetailedResponse resubmitListing(UUID listingId);
 
     void deleteListing(UUID listingId);
 

@@ -1,5 +1,7 @@
 package com.anush.hamrospace.auth.service;
 
+import java.util.UUID;
+
 import com.anush.hamrospace.auth.dto.request.ChangePasswordRequest;
 import com.anush.hamrospace.auth.dto.request.ForgotPasswordRequest;
 import com.anush.hamrospace.auth.dto.request.ResetPasswordRequest;
@@ -9,4 +11,5 @@ public interface PasswordResetService {
     AuthResponse changePassword(ChangePasswordRequest request);
     void forgotPassword(ForgotPasswordRequest request);
     void resetPassword(ResetPasswordRequest request);
+    void adminInitiatePasswordReset(UUID userId);
 }

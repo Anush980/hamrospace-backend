@@ -1,9 +1,12 @@
 package com.anush.hamrospace.amenity.entity;
 
+import com.anush.hamrospace.amenity.enums.AmenityCategory;
 import com.anush.hamrospace.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "amenities")
 public class Amenity extends BaseEntity {
-    
+
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
@@ -24,9 +27,12 @@ public class Amenity extends BaseEntity {
     private String iconUrl;
 
     @Column(name = "is_featured", nullable = false)
-    private boolean featured = false; 
+    private boolean featured = false;
+
+    @Enumerated(EnumType.STRING)
+    private AmenityCategory category;
 
     @Column(name = "is_active", nullable = false)
-    private boolean active=true;
+    private boolean active = true;
 
 }
