@@ -1,5 +1,6 @@
 package com.anush.hamrospace.core.config.storage;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,6 +15,7 @@ public class StorageProperties {
     
     private String provider;
     private List<String> allowedExtensions;
+    private int presignExpirationDuration=300;
 
     private S3Properties s3 = new S3Properties();
 

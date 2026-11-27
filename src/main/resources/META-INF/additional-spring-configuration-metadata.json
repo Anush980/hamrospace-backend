@@ -118,5 +118,15 @@
     "name": "app.booking.fee-percentage",
     "type": "java.lang.String",
     "description": "A description for 'app.booking.fee-percentage'"
+  },
+  {
+    "name": "app.storage.presign-expiration-seconds",
+    "type": "java.lang.String",
+    "description": "A description for 'app.storage.presign-expiration-seconds'"
+  },
+  {
+    "name": "app.storage.presign-expiration-duration",
+    "type": "java.lang.String",
+    "description": "A description for 'app.storage.presign-expiration-duration'"
   }
 ]}

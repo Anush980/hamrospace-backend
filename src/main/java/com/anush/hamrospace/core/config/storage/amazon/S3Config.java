@@ -1,7 +1,7 @@
 package com.anush.hamrospace.core.config.storage.amazon;
 
 import java.net.URI;
-
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +26,31 @@ public class S3Config {
     public S3Client s3Client() {
 
         StorageProperties.S3Properties s3Properties = storageProperties.getS3();
-        
+
         AwsBasicCredentials credentials = AwsBasicCredentials.create(s3Properties.getAccessKey(),
                 s3Properties.getSecretKey());
 
-        return S3Client.builder().endpointOverride(URI.create(s3Properties.getEndpoint()))
+        return S3Client.builder()
+                .endpointOverride(URI.create(s3Properties.getEndpoint()))
                 .region(Region.of(s3Properties.getRegion()))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build()).build();
+                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+                .build();
+    }
+
+    @Bean
+    public S3Presigner s3Presigner() {
+
+        StorageProperties.S3Properties s3Properties = storageProperties.getS3();
+
+        AwsBasicCredentials credentials = AwsBasicCredentials.create(s3Properties.getAccessKey(),
+                s3Properties.getSecretKey());
+
+        return S3Presigner.builder()
+                .endpointOverride(URI.create(s3Properties.getEndpoint()))
+                .region(Region.of(s3Properties.getRegion()))
+                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+                .build();
     }
 }
