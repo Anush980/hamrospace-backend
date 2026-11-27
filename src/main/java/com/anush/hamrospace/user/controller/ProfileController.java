@@ -13,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.anush.hamrospace.common.constants.ApiPath;
 import com.anush.hamrospace.common.dto.response.ApiResponse;
+import com.anush.hamrospace.common.storage.dto.request.PresignedUploadRequest;
+import com.anush.hamrospace.common.storage.dto.response.PresignedUploadResponse;
+import com.anush.hamrospace.user.dto.request.ConfirmProfileImageRequest;
 import com.anush.hamrospace.user.dto.request.ProfileRequest;
 import com.anush.hamrospace.user.dto.response.UserProfileDetailedResponse;
 import com.anush.hamrospace.user.dto.response.UserProfileSummaryResponse;
@@ -44,10 +47,18 @@ public class ProfileController {
         return ApiResponse.ok("Profile updated successfully", profileService.updateMyProfile(request));
     }
 
-    @Operation(summary = "Upload profile image")
-    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<UserProfileDetailedResponse> uploadProfileImage(@RequestParam("file") MultipartFile file) {
-        return ApiResponse.ok("Profile image uploaded successfully", profileService.uploadProfileImage(file));
+    @Operation(summary = "Generate presigned URL for profile image upload")
+    @PostMapping("/image/presign")
+    public ApiResponse<PresignedUploadResponse> presignProfileImageUpload(
+            @Valid @RequestBody PresignedUploadRequest request) {
+        return ApiResponse.ok( "Presigned upload URL generated successfully",profileService.generateProfileImageUploadUrl(request));
+    }
+
+    @Operation(summary = "Confirm profile image upload")
+    @PostMapping("/image/confirm")
+    public ApiResponse<UserProfileDetailedResponse> confirmProfileImageUpload(
+            @Valid @RequestBody ConfirmProfileImageRequest request) {
+        return ApiResponse.ok( "Profile image uploaded successfully", profileService.confirmProfileImageUpload(request.objectKey()));
     }
 
     @Operation(summary = "Remove profile image")

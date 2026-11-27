@@ -77,11 +77,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PropertyReferenceException.class)
-    public ResponseEntity<ApiResponse<Void>>  handlePropertyReferenceException(PropertyReferenceException ex) {
- 
+    public ResponseEntity<ApiResponse<Void>> handlePropertyReferenceException(PropertyReferenceException ex) {
 
-         return errorResponse(HttpStatus.BAD_REQUEST, ErrorCodes.BAD_REQUEST,
-               " Invalid sort or filter parameter provided");
+        return errorResponse(HttpStatus.BAD_REQUEST, ErrorCodes.BAD_REQUEST,
+                " Invalid sort or filter parameter provided");
     }
 
     /**
@@ -166,9 +165,15 @@ public class GlobalExceptionHandler {
         return errorResponse(HttpStatus.BAD_REQUEST, ErrorCodes.BAD_REQUEST, message);
     }
 
-    //  Unsupported Media Type (e.g., sending JSON instead of Multipart) ─────────
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+        log.warn("Invalid argument: {}", ex.getMessage());
+        return errorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ErrorCodes.UNSUPPORTED_MEDIA_TYPE, ex.getMessage());
+    }
 
-@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    // Unsupported Media Type (e.g., sending JSON instead of Multipart) ─────────
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiResponse<Void>> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex) {
         String supportedTypes = ex.getSupportedMediaTypes().stream()
                 .filter(mediaType -> mediaType != null) // Ensure non-null media type
@@ -182,16 +187,16 @@ public class GlobalExceptionHandler {
         return errorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ErrorCodes.UNSUPPORTED_MEDIA_TYPE, message);
     }
 
-    //  Invalid Multipart Request Frame ──────────────────────────────────────────
+    // Invalid Multipart Request Frame ──────────────────────────────────────────
 
     @ExceptionHandler(org.springframework.web.multipart.MultipartException.class)
-    public ResponseEntity<ApiResponse<Void>> handleMultipartException(org.springframework.web.multipart.MultipartException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleMultipartException(
+            org.springframework.web.multipart.MultipartException ex) {
         log.warn("Invalid multipart request parsing attempt: {}", ex.getMessage());
         return errorResponse(HttpStatus.BAD_REQUEST, ErrorCodes.BAD_REQUEST,
                 "Current request is not a valid multipart request. Ensure Content-Type is 'multipart/form-data'.");
     }
 
-    
     // ── Catch-all for unexpected crashes (NullPointer, Database down, etc.)
     // ─────────
 

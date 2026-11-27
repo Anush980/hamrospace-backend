@@ -1,7 +1,7 @@
 package com.anush.hamrospace.user.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
+import com.anush.hamrospace.common.storage.dto.request.PresignedUploadRequest;
+import com.anush.hamrospace.common.storage.dto.response.PresignedUploadResponse;
 import com.anush.hamrospace.user.dto.request.ProfileRequest;
 import com.anush.hamrospace.user.dto.response.UserProfileDetailedResponse;
 import com.anush.hamrospace.user.dto.response.UserProfileSummaryResponse;
@@ -14,6 +14,9 @@ public interface ProfileService {
 
     UserProfileSummaryResponse getMyProfileSummary();
 
-    UserProfileDetailedResponse uploadProfileImage(MultipartFile file);
+    PresignedUploadResponse generateProfileImageUploadUrl(PresignedUploadRequest request);
+
+    UserProfileDetailedResponse confirmProfileImageUpload(String objectKey);
+
     UserProfileDetailedResponse removeProfileImage();
 }

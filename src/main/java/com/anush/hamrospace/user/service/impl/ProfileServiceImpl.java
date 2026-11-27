@@ -4,8 +4,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
+import com.anush.hamrospace.common.storage.dto.request.PresignedUploadRequest;
+import com.anush.hamrospace.common.storage.dto.response.PresignedUploadResponse;
+import com.anush.hamrospace.common.storage.service.PresignStorageService;
 import com.anush.hamrospace.common.storage.service.StorageService;
 import com.anush.hamrospace.common.storage.util.StoragePathBuilder;
 import com.anush.hamrospace.core.exception.http.ResourceNotFoundException;
@@ -28,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class ProfileServiceImpl implements ProfileService {
 
     private final UserRepository userRepository;
-    private final StorageService storageService;
+    private final PresignStorageService presignStorageService;
     private final StoragePathBuilder storagePathBuilder;
     private final ProfileRepository profileRepository;
     private final UserProfileMapper userProfileMapper;
@@ -66,34 +67,6 @@ public class ProfileServiceImpl implements ProfileService {
         return userProfileMapper.toSummaryResponse(user, profile);
     }
 
-    @Override
-    public UserProfileDetailedResponse uploadProfileImage(MultipartFile file) {
-        UUID userId = SecurityUtil.getCurrentUserId();
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Profile profile = findOrCreateProfile(user);
-        if (profile.getProfileImageUrl() != null && !profile.getProfileImageUrl().isBlank()) {
-            storageService.delete(profile.getProfileImageUrl());
-        }
-        String folderPath = storagePathBuilder.userProfilePath(userId);
-        String relativePath = storageService.upload(file, folderPath);
-        profile.setProfileImageUrl(relativePath);
-        Profile updatedProfile = profileRepository.save(profile);
-        return userProfileMapper.toDetailedResponse(user, updatedProfile);
-    }
-
-    @Override
-    public UserProfileDetailedResponse removeProfileImage() {
-        UUID userId = SecurityUtil.getCurrentUserId();
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Profile profile = findOrCreateProfile(user);
-        if (profile.getProfileImageUrl() != null && !profile.getProfileImageUrl().isBlank()) {
-            storageService.delete(profile.getProfileImageUrl());
-            profile.setProfileImageUrl(null);
-        }
-        Profile updatedProfile = profileRepository.save(profile);
-        return userProfileMapper.toDetailedResponse(user, updatedProfile);
-    }
-
     private Profile findOrCreateProfile(User user) {
         return profileRepository.findByUserAndDeletedAtIsNull(user)
                 .orElseGet(() -> {
@@ -104,4 +77,56 @@ public class ProfileServiceImpl implements ProfileService {
                 });
     }
 
+    @Override
+    public PresignedUploadResponse generateProfileImageUploadUrl(PresignedUploadRequest request) {
+        UUID userId = SecurityUtil.getCurrentUserId();
+        String folderPrefix = storagePathBuilder.userProfilePath(userId);
+        return presignStorageService.presignUpload(request, folderPrefix);
+    }
+
+    @Override
+    public UserProfileDetailedResponse confirmProfileImageUpload(String objectKey) {
+        UUID userId = SecurityUtil.getCurrentUserId();
+        String expectedPrefix = storagePathBuilder.userProfilePath(userId) + "/";
+
+        if (objectKey == null || !objectKey.startsWith(expectedPrefix)) {
+            throw new IllegalArgumentException("Invalid object key for current user profile");
+        }
+
+        if (!presignStorageService.objectExists(objectKey)) {
+            throw new IllegalStateException("Uploaded file not found in storage");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Profile profile = findOrCreateProfile(user);
+
+        String oldObjectKey = profile.getProfileImageUrl();
+        profile.setProfileImageUrl(objectKey);
+        Profile savedProfile = profileRepository.save(profile);
+
+        if (oldObjectKey != null && !oldObjectKey.isBlank() && !oldObjectKey.equals(objectKey)) {
+            presignStorageService.deleteObject(oldObjectKey);
+        }
+
+        return userProfileMapper.toDetailedResponse(user, savedProfile);
+    }
+
+    @Override
+    public UserProfileDetailedResponse removeProfileImage() {
+        UUID userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Profile profile = findOrCreateProfile(user);
+
+        String oldObjectKey = profile.getProfileImageUrl();
+        profile.setProfileImageUrl(null);
+        Profile savedProfile = profileRepository.save(profile);
+
+        if (oldObjectKey != null && !oldObjectKey.isBlank()) {
+            presignStorageService.deleteObject(oldObjectKey);
+        }
+
+        return userProfileMapper.toDetailedResponse(user, savedProfile);
+    }
 }
